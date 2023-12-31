@@ -1,10 +1,15 @@
 package hello.hellospring.controller;
 
+import hello.hellospring.domain.Member;
 import hello.hellospring.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import java.util.List;
+import org.springframework.ui.Model;
+
 
 @Controller
 public class MemberController {
@@ -21,4 +26,19 @@ public class MemberController {
         return "members/createMemberForm";
     }
 
+    @PostMapping("/members/new")
+    public String create(MemberForm form){
+        Member member = new Member();
+        member.setName(form.getName());
+        memberService.join(member);
+        return "redirect:/";
+    }
+    // Get은 조회할 때 사용 Post는 등록할 때 많이 사용
+
+    @GetMapping("/members")
+    public String list(Model model){
+        List<Member> members = memberService.findMembers();
+        model.addAttribute("members", members);
+        return "members/memberList";
+    }
 }
